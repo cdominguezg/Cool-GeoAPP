@@ -8,6 +8,15 @@ services:
       - POSTGRES_DB=coolgeoapp
     ports:
       - "5432:5432"
+    volumes:
+      - ./data/init.sql:/docker-entrypoint-initdb.d/1-init.sql
+      - ./data/postal_codes.sql:/docker-entrypoint-initdb.d/2-postal_codes.sql
+      - ./data/paystats.sql:/docker-entrypoint-initdb.d/3-paystats.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d coolgeoapp"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     
   geoapp:
     container_name: geoapp
@@ -16,3 +25,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - 8000:8000
+    depends_on:
+      postgres:
+        condition: service_healthy
