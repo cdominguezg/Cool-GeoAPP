@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+  postgres:
+    image: postgis/postgis
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysupersecretpassword
+      - POSTGRES_DB=coolgeoapp
+    ports:
+      - "5432:5432"
+    
+  geoapp:
+    container_name: geoapp
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
