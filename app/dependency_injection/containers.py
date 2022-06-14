@@ -1,6 +1,6 @@
 from dependency_injector import containers, providers
 
-from app.controller.dependency_injection.src.postal_code.postal_code_di import PostalCodeContainer
+from app.dependency_injection.src.postal_code.postal_code_di import PostalCodeContainer
 
 
 class ApplicationContainer(containers.DeclarativeContainer):

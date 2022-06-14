@@ -10,7 +10,7 @@ class PostalCodeContainer(containers.DeclarativeContainer):
     config = providers.Configuration()
 
     postgres_sql_client = providers.Factory(
-        PostgresClient.create_client,
+        PostgresClient,
         host=config.POSTGRES_HOST,
         port=config.POSTGRES_PORT,
         user=config.POSTGRES_USER,

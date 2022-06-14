@@ -17,7 +17,6 @@ class PostalCodeLister:
         #                                        db_name="coolgeoapp",
         #                                        password="mysupersecretpassword",
         #                                        user="postgres")
-        # return PostalCodePostgresRepository(cliente).list()
-        return {
-            "test": "test"
-        }
+
+        return self.repository.list()
+        # return self.repository.list()

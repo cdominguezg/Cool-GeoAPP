@@ -25,6 +25,7 @@ class PostgresClient:
             password: str,
             db_name: str
     ):
+        print(password)
         return PostgresClient(host, port, user, password, db_name)
 
     def __connect(f):

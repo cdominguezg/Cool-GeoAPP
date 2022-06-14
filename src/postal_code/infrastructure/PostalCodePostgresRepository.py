@@ -16,7 +16,7 @@ class PostalCodePostgresRepository(PostalCodeRepository):
             SELECT jsonb_build_object(
                'type', 'FeatureCollection',
                'features', jsonb_agg(features.feature)
-           )
+           ) as "geom"
             FROM (
                  SELECT jsonb_build_object(
                                 'type', 'Feature',
@@ -30,6 +30,6 @@ class PostalCodePostgresRepository(PostalCodeRepository):
                             ) AS feature
                  FROM (SELECT geom, code, id
                     from postal_code) inputs) features;
-            """, params=None).get('geom', None)
+            """, params=None).get('geom')
         return PostalCode(features=PostalCodeFeatures(result['features']),
                           type=PostalCodeType(result['type'])) if result is not None else None
