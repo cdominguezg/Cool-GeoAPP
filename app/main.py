@@ -1,9 +1,9 @@
-from flask import Flask
+from flask import Flask, jsonify
 
-from src import return_data_well
+from src.postal_code.application.PostalCodeLister import PostalCodeLister
 
 app = Flask(__name__)
 
 @app.route("/")
 def hello_world():
-    return "Hello World!"
+    return jsonify(PostalCodeLister().run().to_primitives())
