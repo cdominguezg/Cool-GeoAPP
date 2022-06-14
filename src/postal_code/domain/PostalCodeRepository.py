@@ -1,6 +1,6 @@
 from abc import ABC
 
-from src.postal_code.domain.PostalCodeType import PostalCodeType
+from src.postal_code.domain.PostalCodeId import PostalCodeId
 
 
 class PostalCodeRepository(ABC):
@@ -8,5 +8,5 @@ class PostalCodeRepository(ABC):
     def list(self):
         pass
 
-    def get(self, postal_code_id: PostalCodeType):
+    def get(self, postal_code_id: PostalCodeId):
         pass

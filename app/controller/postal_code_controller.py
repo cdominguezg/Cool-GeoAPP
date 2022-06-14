@@ -13,4 +13,11 @@ def construct_postal_code_blueprint() -> Blueprint:
         result = result.to_primitives() if result is not None else None
         return jsonify(result)
 
+    @postal_code_blueprint.route('/<id>', methods=['GET'])
+    def get_postal_code(id: int):
+        postal_code_finder = ApplicationContainer().postal_code.postal_code_finder_use_case()
+        result = postal_code_finder.run(id) or None
+        result = result.to_primitives() if result is not None else None
+        return jsonify(result), 200 if result is not None else 404
+
     return postal_code_blueprint

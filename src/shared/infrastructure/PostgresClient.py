@@ -69,6 +69,7 @@ class PostgresClient:
 
     @__connect
     def execute_json_query(self, cursor, query: str, params: dict):
+
         cursor.execute(query, params)
         response = cursor.fetchone()
-        return dict(response)
+        return dict(response or {}) or None

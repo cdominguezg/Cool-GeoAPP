@@ -1,10 +1,11 @@
+from src.postal_code.domain.PostalCodeId import PostalCodeId
 from src.postal_code.domain.PostalCodeRepository import PostalCodeRepository
 
 
-class PostalCodeLister:
+class PostalCodeFinder:
 
     def __init__(self, repository: PostalCodeRepository):
         self.repository = repository
 
-    def run(self):
-        return self.repository.list()
+    def run(self, id: int):
+        return self.repository.get(PostalCodeId(id)) or None
