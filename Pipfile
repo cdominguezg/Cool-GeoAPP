@@ -10,6 +10,8 @@ test = "pytest"
 [packages]
 flask = "*"
 psycopg2 = "*"
+dependency-injector = "*"
+pyyaml = "*"
 
 [dev-packages]
 pytest = "*"
