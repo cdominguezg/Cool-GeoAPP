@@ -67,7 +67,7 @@ class PostgresClient:
         return list(response)
 
     @__connect
-    def execute_json_query(self, cursor, query: str, params: dict):
+    def execute_aggregated_query(self, cursor, query: str, params: dict):
 
         cursor.execute(query, params)
         response = cursor.fetchone()
