@@ -13,11 +13,13 @@ services:
       - ./data/postal_codes.sql:/docker-entrypoint-initdb.d/2-postal_codes.sql
       - ./data/paystats.sql:/docker-entrypoint-initdb.d/3-paystats.sql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d coolgeoapp"]
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d coolgeoapp" ]
       interval: 10s
       timeout: 5s
       retries: 5
-    
+    networks:
+      - geoapp_net
+      - geoapp_db
   geoapp:
     container_name: geoapp
     build:
@@ -28,3 +30,17 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    networks:
+      - geoapp_net
+      - geoapp_db
+    links:
+      - postgres
+
+networks:
+  geoapp_net:
+    name: geoapp_net
+    internal: false
+
+  geoapp_db:
+    name: geoapp_db
+    internal: true

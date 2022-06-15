@@ -4,14 +4,19 @@ verify_ssl = true
 name = "pypi"
 
 [scripts]
-start = "gunicorn -w 4 -b 0.0.0.0 'app.main:app'"
+start = "gunicorn -w 4 -b 0.0.0.0 'app.main:application'"
 test = "pytest"
 
 [packages]
 flask = "*"
+dependency-injector = "*"
+pyyaml = "*"
+psycopg2-binary = "*"
+gunicorn = "*"
 
 [dev-packages]
 pytest = "*"
+waitress = "*"
 
 [requires]
 python_version = "3.9"

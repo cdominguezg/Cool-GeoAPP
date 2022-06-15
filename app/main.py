@@ -1,9 +1,16 @@
 from flask import Flask
 
-from src import return_data_well
+from app.controller.postal_code_controller import construct_postal_code_blueprint
+from app.dependency_injection.containers import ApplicationContainer
 
-app = Flask(__name__)
 
-@app.route("/")
-def hello_world():
-    return "Hello World!"
+def create_app():
+    container = ApplicationContainer()
+    container.postal_code.init_resources()
+    container.wire(modules=[__name__])
+    app = Flask(__name__)
+    app.register_blueprint(construct_postal_code_blueprint())
+
+    return app
+
+application = create_app()
