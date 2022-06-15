@@ -12,3 +12,5 @@ def create_app():
     app.register_blueprint(construct_postal_code_blueprint())
 
     return app
+
+application = create_app()
