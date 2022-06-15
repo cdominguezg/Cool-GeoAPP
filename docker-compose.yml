@@ -17,7 +17,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    
+    network_mode: "host"
+
   geoapp:
     container_name: geoapp
     build:
@@ -28,3 +29,4 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+    network_mode: "host"
