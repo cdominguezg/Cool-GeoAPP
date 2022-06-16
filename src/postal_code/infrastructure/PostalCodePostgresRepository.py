@@ -1,8 +1,4 @@
-from src.postal_code.domain.PostalCode import PostalCode
-from src.postal_code.domain.PostalCodeCollection import PostalCodeCollection
-from src.postal_code.domain.PostalCodeFeatures import PostalCodeFeatures
 from src.postal_code.domain.PostalCodeId import PostalCodeId
-from src.postal_code.domain.PostalCodeType import PostalCodeType
 from src.postal_code.domain.PostalCodeRepository import PostalCodeRepository
 from src.shared.infrastructure.PostgresClient import PostgresClient
 
@@ -13,7 +9,7 @@ class PostalCodePostgresRepository(PostalCodeRepository):
                  client: PostgresClient):
         self.__client = client
 
-    def list(self):
+    def list_geojson(self):
         result = self.__client.execute_aggregated_query(query="""
             SELECT jsonb_build_object(
                'type', 'FeatureCollection',
@@ -46,10 +42,9 @@ FROM (
          FROM (SELECT geom, code, id
                from postal_code p) inputs) features;
             """, params=None).get('geom')
-        return PostalCodeCollection(features=PostalCodeFeatures(result['features']),
-                                    type=PostalCodeType(result['type'])) if result is not None else None
+        return result
 
-    def get(self, postal_code_id: PostalCodeId):
+    def get_geojson(self, postal_code_id: PostalCodeId):
         result = self.__client.execute_aggregated_query(query="""
                     select json_build_object(
                        'type', 'Feature',
@@ -82,6 +77,4 @@ FROM (
             'id': postal_code_id.value()
         })
         result = result.get('geom') or None if result is not None else None
-        return PostalCode(geometry=PostalCodeFeatures(result['geometry']),
-                          type=PostalCodeType(result['type']),
-                          properties=result['properties']) if result is not None else None
+        return result

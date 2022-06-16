@@ -1,7 +1,5 @@
 import pytest
 
-from src.postal_code.domain.PostalCode import PostalCode
-from src.postal_code.domain.PostalCodeCollection import PostalCodeCollection
 from src.postal_code.domain.PostalCodeId import PostalCodeId
 from src.postal_code.infrastructure.PostalCodePostgresRepository import PostalCodePostgresRepository
 from src.shared.infrastructure.PostgresClient import PostgresClient
@@ -21,12 +19,12 @@ def repository():
 
 
 def test_get_repository_method(repository):
-    result = repository.get(postal_code_id=PostalCodeId(6055))
-    assert type(result) == PostalCode
-    result = repository.get(postal_code_id=PostalCodeId(1))
+    result = repository.get_geojson(postal_code_id=PostalCodeId(6055))
+    assert type(result) == dict
+    result = repository.get_geojson(postal_code_id=PostalCodeId(1))
     assert result is None
 
 
 def test_list_repository_method(repository):
-    result = repository.list()
-    assert type(result) == PostalCodeCollection
+    result = repository.list_geojson()
+    assert type(result) == dict

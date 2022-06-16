@@ -7,4 +7,4 @@ class PostalCodeLister:
         self.repository = repository
 
     def run(self):
-        return self.repository.list()
+        return self.repository.list_geojson()
