@@ -2,6 +2,7 @@ from dependency_injector import containers, providers
 
 from src.shared.infrastructure.PostgresClient import PostgresClient
 from src.turnover.application.TurnoverByAge import TurnoverByAge
+from src.turnover.application.TurnoverByDate import TurnoverByDate
 from src.turnover.application.TurnoverTotal import TurnoverTotal
 from src.turnover.infrastructure.TurnoverPostgresRepository import TurnoverPostgresRepository
 
@@ -30,5 +31,10 @@ class TurnoverContainer(containers.DeclarativeContainer):
 
     turnover_by_age_use_case = providers.Resource(
         TurnoverByAge,
+        repository=turnover_repository
+    )
+
+    turnover_by_date_use_case = providers.Resource(
+        TurnoverByDate,
         repository=turnover_repository
     )
