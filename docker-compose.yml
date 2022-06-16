@@ -21,6 +21,16 @@ services:
       geoapp_db:
         ipv4_address: 172.16.238.10
 
+  redis:
+    image: redis
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+    networks:
+      geoapp_db:
+        ipv4_address: 172.16.238.11
+    ports:
+    - "6379:6379"
+
   geoapp:
     container_name: geoapp
     build:

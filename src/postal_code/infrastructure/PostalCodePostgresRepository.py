@@ -1,15 +1,22 @@
+import json
+
 from src.postal_code.domain.PostalCodeId import PostalCodeId
 from src.postal_code.domain.PostalCodeRepository import PostalCodeRepository
 from src.shared.infrastructure.PostgresClient import PostgresClient
+from src.shared.infrastructure.RedisClient import RedisClient
 
 
 class PostalCodePostgresRepository(PostalCodeRepository):
 
     def __init__(self,
-                 client: PostgresClient):
+                 client: PostgresClient,
+                 redis_client: RedisClient):
         self.__client = client
+        self.__redis_client = redis_client
 
     def list_geojson(self):
+        if self.__redis_client.exists('postal_code_list_geojson'):
+            return json.loads(self.__redis_client.get('postal_code_list_geojson'))
         result = self.__client.execute_aggregated_query(query="""
             SELECT jsonb_build_object(
                'type', 'FeatureCollection',
@@ -42,9 +49,12 @@ FROM (
          FROM (SELECT geom, code, id
                from postal_code p) inputs) features;
             """, params=None).get('geom')
+        self.__redis_client.set('postal_code_list_geojson', json.dumps(result))
         return result
 
     def get_geojson(self, postal_code_id: PostalCodeId):
+        if self.__redis_client.exists('postal_code_' + str(postal_code_id) + '_geojson'):
+            return json.loads(self.__redis_client.get('postal_code_' + str(postal_code_id) + '_geojson'))
         result = self.__client.execute_aggregated_query(query="""
                     select json_build_object(
                        'type', 'Feature',
@@ -77,4 +87,6 @@ FROM (
             'id': postal_code_id.value()
         })
         result = result.get('geom') or None if result is not None else None
+        if result is not None:
+            self.__redis_client.set('postal_code_' + str(postal_code_id) + '_geojson', json.dumps(result))
         return result
