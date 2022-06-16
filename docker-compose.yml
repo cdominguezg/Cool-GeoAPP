@@ -18,8 +18,9 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - geoapp_net
-      - geoapp_db
+      geoapp_db:
+        ipv4_address: 172.16.238.10
+
   geoapp:
     container_name: geoapp
     build:
@@ -33,8 +34,6 @@ services:
     networks:
       - geoapp_net
       - geoapp_db
-    links:
-      - postgres
 
 networks:
   geoapp_net:
@@ -42,5 +41,9 @@ networks:
     internal: false
 
   geoapp_db:
-    name: geoapp_db
-    internal: true
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.238.0/24
+          gateway: 172.16.238.1
