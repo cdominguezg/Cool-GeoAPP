@@ -14,7 +14,7 @@ class PostalCodePostgresRepository(PostalCodeRepository):
         self.__client = client
 
     def list(self):
-        result = self.__client.execute_json_query(query="""
+        result = self.__client.execute_aggregated_query(query="""
             SELECT jsonb_build_object(
                'type', 'FeatureCollection',
                'features', jsonb_agg(features.feature)
@@ -50,7 +50,7 @@ FROM (
                                     type=PostalCodeType(result['type'])) if result is not None else None
 
     def get(self, postal_code_id: PostalCodeId):
-        result = self.__client.execute_json_query(query="""
+        result = self.__client.execute_aggregated_query(query="""
                     select json_build_object(
                        'type', 'Feature',
                        'geometry', ST_AsGeoJSON(ST_Transform(geom, 4326))::jsonb,
