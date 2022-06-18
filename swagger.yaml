@@ -1,0 +1,172 @@
+swagger: "2.0"
+info:
+  description: "This is a the documentation for the Cool GeoAPP API Rest."
+  version: "1.0.0"
+  title: "Cool GeoApp"
+  contact:
+    email: "crisdomgo@gmail.com"
+host: "localhost"
+tags:
+- name: "Postal Code"
+  description: "GeoJSON data for the postal codes of Madrid"
+- name: "Turnover"
+  description: "All about turnover in Madrid"
+schemes:
+- "http"
+paths:
+  /postal-code:
+    get:
+      tags:
+      - "Postal Code"
+      summary: "Get the full GeoJSON of postal codes of Madrid with some population data"
+      description: "Get the full GeoJSON of postal codes of Madrid with information about age range and gender"
+      operationId: "listPostalCode"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: '#/definitions/GeoJSON'
+            
+  /postal-code/{postalCodeId}:
+    get:
+      parameters:
+      - name: "postalCodeId"
+        in: "path"
+        description: "ID of postal code to return"
+        required: true
+        type: "integer"
+        format: "int64"
+      tags:
+      - "Postal Code"
+      summary: "Get the full GeoJSON of a postal code of Madrid with some population data"
+      description: "Get the full GeoJSON of a postal code of Madrid with information about age range and gender"
+      operationId: "getPostalCode"
+      produces:
+      - "application/json"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: '#/definitions/GeoJSON'
+  /turnover/total:
+    get:
+      tags:
+      - "Turnover"
+      parameters:
+      - name: "initDate"
+        in: "query"
+        required: true
+        type: string
+        format: "YYYY-MM-DD"
+      - name: "endDate"
+        in: "query"
+        required: true
+        type: string
+        format: "YYYY-MM-DD"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            type: object
+            properties:
+              total:
+                type: number
+                example: 2139087123987.123897
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: '#/definitions/InvalidDate'
+  /turnover/accumulated:
+    get:
+      tags:
+      - "Turnover"
+      parameters:
+      - name: "initDate"
+        in: "query"
+        required: true
+        type: string
+        format: "YYYY-MM-DD"
+      - name: "endDate"
+        in: "query"
+        required: true
+        type: string
+        format: "YYYY-MM-DD"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            example: {"25-34":{"female":17560824.09276,"male":14413842.59431},"35-44":{"female":28736836.38654,"male":23596464.54864},"45-54":{"female":27090641.71783,"male":21644517.68587},"55-64":{"female":19255552.29749,"male":15542640.44569},"<=24":{"female":2838965.41331,"male":2337934.30713},">=65":{"female":13627257.93895,"male":12492483.32622}}
+              
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: '#/definitions/InvalidDate'
+            
+  /turnover/series:
+    get:
+      tags:
+      - "Turnover"
+      parameters:
+      - name: "initDate"
+        in: "query"
+        required: true
+        type: string
+        format: "YYYY-MM-DD"
+      - name: "endDate"
+        in: "query"
+        required: true
+        type: string
+        format: "YYYY-MM-DD"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            example: {"2015-01-01":[{"age_range":"<=24","gender":"F","total":1560004.23648},{"age_range":"<=24","gender":"M","total":1308398.29097},{"age_range":"25-34","gender":"F","total":9746020.298},{"age_range":"25-34","gender":"M","total":7861258.40943},{"age_range":"35-44","gender":"F","total":15743231.26203},{"age_range":"35-44","gender":"M","total":12703262.873},{"age_range":"45-54","gender":"F","total":14920020.35088},{"age_range":"45-54","gender":"M","total":11683339.59069},{"age_range":"55-64","gender":"F","total":10603828.60859},{"age_range":"55-64","gender":"M","total":8307127.16309},{"age_range":">=65","gender":"F","total":7431925.74922},{"age_range":">=65","gender":"M","total":6640479.09387}],"2015-02-01":[{"age_range":"<=24","gender":"F","total":1278961.17683},{"age_range":"<=24","gender":"M","total":1029536.01616},{"age_range":"25-34","gender":"F","total":7814803.79476},{"age_range":"25-34","gender":"M","total":6552584.18488},{"age_range":"35-44","gender":"F","total":12993605.12451},{"age_range":"35-44","gender":"M","total":10893201.67564},{"age_range":"45-54","gender":"F","total":12170621.36695},{"age_range":"45-54","gender":"M","total":9961178.09518},{"age_range":"55-64","gender":"F","total":8651723.6889},{"age_range":"55-64","gender":"M","total":7235513.2826},{"age_range":">=65","gender":"F","total":6195332.18973},{"age_range":">=65","gender":"M","total":5852004.23235}]}
+              
+        "400":
+          description: "Bad Request"
+          schema:
+            $ref: '#/definitions/InvalidDate'
+definitions:
+  GeoJSON:
+    type: "object"
+    properties:
+      features:
+        type: array
+        items:
+          type: object
+          properties: 
+            geometry:
+              type: object
+              properties:
+                coordinates:
+                  type: array
+                  items:
+                    type: array
+                    items:
+                      type: number
+                      example: [[[-3.834984766,40.39684357],[-3.835818634,40.396706666],[-3.83710359,40.39663108],[-3.838640498,40.396857837],[-3.841651421,40.397210842],[-3.841739741,40.397010981],[-3.841769498,40.396943161],[-3.842233483,40.39570559]]]
+            type:
+              type: string
+              example: "Feature"
+            properties:
+              type: object
+              properties:
+                "25-34":
+                  type: string
+                  example: "M 3185844.52776 F 4240419.06850"
+                "zipcode":
+                  type: number
+                  example: 25080
+      type:
+        type: string
+        example: "FeatureCollection"  
+
+  InvalidDate:
+    type: "object"
+    properties:
+      message:
+        type: string
+        example: "Invalid date"

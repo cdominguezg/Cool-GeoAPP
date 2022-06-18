@@ -8,4 +8,4 @@ class PostalCodeFinder:
         self.repository = repository
 
     def run(self, id: int):
-        return self.repository.get(PostalCodeId(id)) or None
+        return self.repository.get_geojson(PostalCodeId(id)) or None

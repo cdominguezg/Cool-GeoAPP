@@ -4,6 +4,7 @@ from src.postal_code.application.PostalCodeFinder import PostalCodeFinder
 from src.postal_code.application.PostalCodeLister import PostalCodeLister
 from src.postal_code.infrastructure.PostalCodePostgresRepository import PostalCodePostgresRepository
 from src.shared.infrastructure.PostgresClient import PostgresClient
+from src.shared.infrastructure.RedisClient import RedisClient
 
 
 class PostalCodeContainer(containers.DeclarativeContainer):
@@ -17,10 +18,17 @@ class PostalCodeContainer(containers.DeclarativeContainer):
         password=config.POSTGRES_PASSWORD,
         db_name=config.POSTGRES_DB_NAME
     )
+    redis_client = providers.Factory(
+        RedisClient,
+        host=config.REDIS_HOST,
+        port=config.REDIS_PORT,
+        db=1
+    )
 
     postal_code_repository = providers.Resource(
         PostalCodePostgresRepository,
-        client=postgres_sql_client
+        client=postgres_sql_client,
+        redis_client=redis_client
     )
 
     postal_code_list_use_case = providers.Resource(
