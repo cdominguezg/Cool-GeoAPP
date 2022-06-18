@@ -1,6 +1,7 @@
 from dependency_injector import containers, providers
 
 from src.shared.infrastructure.PostgresClient import PostgresClient
+from src.shared.infrastructure.RedisClient import RedisClient
 from src.turnover.application.TurnoverByAge import TurnoverByAge
 from src.turnover.application.TurnoverByDate import TurnoverByDate
 from src.turnover.application.TurnoverTotal import TurnoverTotal
@@ -19,9 +20,17 @@ class TurnoverContainer(containers.DeclarativeContainer):
         db_name=config.POSTGRES_DB_NAME
     )
 
+    redis_client = providers.Factory(
+        RedisClient,
+        host=config.REDIS_HOST,
+        port=config.REDIS_PORT,
+        db=0
+    )
+
     turnover_repository = providers.Resource(
         TurnoverPostgresRepository,
-        client=postgres_sql_client
+        client=postgres_sql_client,
+        redis_client=redis_client
     )
 
     turnover_total_use_case = providers.Resource(
